@@ -7,10 +7,12 @@ import (
 	"strings"
 )
 
+const StaticDirPath = "./static"
+
 func (app *application) routes() http.Handler {
 	mux := http.NewServeMux()
 
-	staticFS := os.DirFS("./static")
+	staticFS := os.DirFS(StaticDirPath)
 	fileServer := http.FileServerFS(staticFS)
 
 	entries, err := fs.ReadDir(staticFS, ".")
