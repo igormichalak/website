@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 	"time"
+	"unicode"
 )
 
 var UntrackedPaths = []string{"/css", "/fonts", "/js", "/favicon.ico"}
@@ -59,12 +60,15 @@ func (app *application) recoverPanic(next http.Handler) http.Handler {
 
 func (app *application) wwwRedirect(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if !app.Debug && !strings.HasPrefix(r.Host, "www.") {
+		if strings.HasPrefix(r.Host, "localhost") || unicode.IsDigit([]rune(r.Host)[0]) {
+			next.ServeHTTP(w, r)
+			return
+		}
+		if !strings.HasPrefix(r.Host, "www.") {
 			dst := "https://www." + r.Host + r.URL.RequestURI()
 			http.Redirect(w, r, dst, http.StatusMovedPermanently)
 			return
 		}
-
 		next.ServeHTTP(w, r)
 	})
 }
