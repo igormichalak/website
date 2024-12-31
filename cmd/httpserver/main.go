@@ -29,8 +29,8 @@ func main() {
 }
 
 func run() error {
-	certFile := flag.String("cert-file", "./cert.pem", "certificate file path")
-	keyFile := flag.String("key-file", "./key.pem", "key file path")
+	certFile := flag.String("cert-file", "./tls/cert.pem", "certificate file path")
+	keyFile := flag.String("key-file", "./tls/key.pem", "key file path")
 	debug := flag.Bool("debug", false, "debug mode")
 	flag.Parse()
 

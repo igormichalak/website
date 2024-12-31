@@ -1,2 +1,4 @@
-/.idea/
+.idea/
+tls/*
+!tls/.gitkeep
 *.pem
