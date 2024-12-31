@@ -16,6 +16,7 @@ import (
 )
 
 const DefaultPort = "8080"
+const BaseURL = "https://www.igormichalak.com"
 
 type application struct {
 	Logger        *slog.Logger
