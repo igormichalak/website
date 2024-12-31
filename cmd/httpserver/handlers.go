@@ -5,9 +5,7 @@ import (
 )
 
 func (app *application) homeView(w http.ResponseWriter, r *http.Request) {
-	//if err := view.Home(view.AllPostEntries, view.AllTags).Render(r.Context(), w); err != nil {
-	//	app.error(w, r, err)
-	//}
+	app.render(w, r, http.StatusOK, "home.gohtml")
 }
 
 func (app *application) sitemap(w http.ResponseWriter, r *http.Request) {

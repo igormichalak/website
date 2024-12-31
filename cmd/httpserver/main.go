@@ -6,6 +6,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"html/template"
 	"log/slog"
 	"net/http"
 	"os"
@@ -17,8 +18,9 @@ import (
 const DefaultPort = "8080"
 
 type application struct {
-	Logger *slog.Logger
-	Debug  bool
+	Logger        *slog.Logger
+	Debug         bool
+	TemplateCache map[string]*template.Template
 }
 
 func main() {
@@ -52,9 +54,16 @@ func run() error {
 		logger = slog.New(handler)
 	}
 
+	tmplCache, err := newTemplateCache()
+	if err != nil {
+		logger.Error("Failed to instantiate template cache", "err", err)
+		return fmt.Errorf("failed to instantiate template cache: %w", err)
+	}
+
 	app := &application{
-		Logger: logger,
-		Debug:  *debug,
+		Logger:        logger,
+		Debug:         *debug,
+		TemplateCache: tmplCache,
 	}
 
 	tlsConfig := &tls.Config{
