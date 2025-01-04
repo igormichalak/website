@@ -5,9 +5,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{template "title" .}}</title>
+
+    <link href="/css/font.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
 </head>
 <body>
-    {{template "main" .}}
+    <div class="wrapper">
+        <h2>Igor Michalak</h2>
+        <nav>
+            <ul class="link-list">
+                <li><a href="/">Home</a>
+                <li><a href="https://x.com/igorjmichalak">X</a>
+                <li><a href="https://github.com/igormichalak">GitHub</a>
+                <li><a href="https://buymeacoffee.com/igormichalak">Buy Me a Coffee</a>
+            </ul>
+        </nav>
+        <main class="content">
+            {{template "content" .}}
+        </main>
+        <footer>
+            <a href="https://github.com/igormichalak/website">Source</a>
+            <pre>&nbsp;&bull;&nbsp;</pre>
+            <span>All code snippets are under <a href="/0BSD.txt">0BSD</a> license.</span>
+        </footer>
+    </div>
 </body>
 </html>
 {{end}}

@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"html/template"
 	"io"
 	"io/fs"
 	"os"
@@ -23,7 +24,7 @@ type Writing struct {
 	Title       string
 	Slug        string
 	Featured    bool
-	Body        string
+	Body        template.HTML
 	PublishedAt time.Time
 }
 
@@ -51,7 +52,7 @@ func loadWriting(file fs.File, md goldmark.Markdown) (*Writing, error) {
 	metadata := meta.Get(ctx)
 	writing := &Writing{
 		Featured: false,
-		Body:     buf.String(),
+		Body:     template.HTML(buf.String()),
 	}
 
 	title, ok := metadata["title"].(string)
@@ -97,7 +98,6 @@ func init() {
 			meta.Meta,
 		),
 		goldmark.WithRendererOptions(
-			html.WithHardWraps(),
 			html.WithUnsafe(),
 		),
 	)
