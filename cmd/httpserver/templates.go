@@ -40,7 +40,7 @@ func newTemplateCache() (map[string]*template.Template, error) {
 	return cache, nil
 }
 
-func (app *application) render(w http.ResponseWriter, r *http.Request, status int, filename string) {
+func (app *application) render(w http.ResponseWriter, r *http.Request, status int, filename string, data any) {
 	tmpl, ok := app.TemplateCache[filename]
 	if !ok {
 		app.error(w, r, fmt.Errorf("the template %s does not exist", filename))
@@ -49,7 +49,7 @@ func (app *application) render(w http.ResponseWriter, r *http.Request, status in
 
 	var buf bytes.Buffer
 
-	if err := tmpl.ExecuteTemplate(&buf, "base", struct{}{}); err != nil {
+	if err := tmpl.ExecuteTemplate(&buf, "base", data); err != nil {
 		app.error(w, r, err)
 		return
 	}

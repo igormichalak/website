@@ -73,7 +73,7 @@ func loadWriting(file fs.File, md goldmark.Markdown) (*Writing, error) {
 	if !ok {
 		return nil, fmt.Errorf("no valid published_at meta for %s", fileInfo.Name())
 	}
-	publishedAt, err := time.Parse(time.RFC3339, publishedAtString)
+	publishedAt, err := time.Parse("2006-01-02", publishedAtString)
 	if err != nil {
 		return nil, fmt.Errorf("can't parse published_at: %w", err)
 	}
@@ -117,7 +117,7 @@ func init() {
 			panic(fmt.Errorf("failed to load a writing: %w", err))
 		}
 		if writing == nil {
-			fmt.Printf("Ignoring %s/%s", WritingsDirPath, entry.Name())
+			fmt.Printf("Ignoring %s/%s\n", WritingsDirPath, entry.Name())
 		} else {
 			Writings = append(Writings, *writing)
 		}
@@ -127,5 +127,5 @@ func init() {
 		}
 	}
 
-	fmt.Printf("Loaded %d writings.\n", len(Writings))
+	fmt.Printf("Loaded %d writing(s).\n", len(Writings))
 }
