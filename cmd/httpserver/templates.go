@@ -10,6 +10,11 @@ import (
 	"github.com/igormichalak/website/view"
 )
 
+type TemplateData struct {
+	AllWritings   []Writing
+	ActiveWriting *Writing
+}
+
 func newTemplateCache() (map[string]*template.Template, error) {
 	cache := map[string]*template.Template{}
 
@@ -40,7 +45,13 @@ func newTemplateCache() (map[string]*template.Template, error) {
 	return cache, nil
 }
 
-func (app *application) render(w http.ResponseWriter, r *http.Request, status int, filename string, data any) {
+func (app *application) render(
+	w http.ResponseWriter,
+	r *http.Request,
+	status int,
+	filename string,
+	data *TemplateData,
+) {
 	tmpl, ok := app.TemplateCache[filename]
 	if !ok {
 		app.error(w, r, fmt.Errorf("the template %s does not exist", filename))

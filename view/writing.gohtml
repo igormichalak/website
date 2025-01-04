@@ -1,6 +1,7 @@
-{{define "title"}}{{.Title}} - Igor Michalak{{end}}
+{{define "title"}}{{.ActiveWriting.Title}} - Igor Michalak{{end}}
 
-{{define "content"}}
+{{define "content"}}{{with .ActiveWriting}}
 <h1>{{.Title}}</h1>
+<span class="writing-details font-mono">{{.PublishedAt.Format "2006-01-02"}}</span>
 {{.Body}}
-{{end}}
+{{end}}{{end}}

@@ -7,7 +7,8 @@ import (
 )
 
 func (app *application) homeView(w http.ResponseWriter, r *http.Request) {
-	app.render(w, r, http.StatusOK, "home.gohtml", nil)
+	data := &TemplateData{AllWritings: Writings}
+	app.render(w, r, http.StatusOK, "home.gohtml", data)
 }
 
 func (app *application) sitemap(w http.ResponseWriter, r *http.Request) {
@@ -38,5 +39,6 @@ func (app *application) sitemap(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) writingView(w http.ResponseWriter, r *http.Request, writing *Writing) {
-	app.render(w, r, http.StatusOK, "writing.gohtml", writing)
+	data := &TemplateData{ActiveWriting: writing}
+	app.render(w, r, http.StatusOK, "writing.gohtml", data)
 }
