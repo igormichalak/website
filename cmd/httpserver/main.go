@@ -67,7 +67,14 @@ func run() error {
 		TemplateCache: tmplCache,
 	}
 
+	kpr, err := app.StartKeyPairReloader(*certFile, *keyFile)
+	if err != nil {
+		logger.Error("Failed to start key pair reloader", "err", err)
+		return fmt.Errorf("failed to start key pair reloader: %w", err)
+	}
+
 	tlsConfig := &tls.Config{
+		GetCertificate: kpr.GetCertificate,
 		MinVersion: tls.VersionTLS12,
 		MaxVersion: tls.VersionTLS13,
 		CipherSuites: []uint16{
@@ -105,7 +112,7 @@ func run() error {
 	go func(ec chan error) {
 		logger.Info(fmt.Sprintf("Starting server on %s...", srv.Addr))
 
-		err := srv.ListenAndServeTLS(*certFile, *keyFile)
+		err := srv.ListenAndServeTLS("", "")
 		if err != nil && !errors.Is(err, http.ErrServerClosed) {
 			logger.Error("Server failed", "err", err)
 			ec <- fmt.Errorf("server failed: %w", err)
