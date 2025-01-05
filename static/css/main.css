@@ -32,6 +32,13 @@ button {
     touch-action: manipulation;
 }
 
+.link-like {
+    all: unset;
+    display: inline-block;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 .wrapper {
     width: 90%;
     max-width: 48rem;
@@ -65,13 +72,19 @@ hr {
     align-items: center;
 }
 
+.row-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .link-list {
     margin: 0;
     padding: 0;
     list-style-type: none;
 
     display: flex;
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
 .writing-list {

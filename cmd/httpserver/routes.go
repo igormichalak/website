@@ -24,32 +24,29 @@ func (app *application) routes() http.Handler {
 		topLevelPaths[i] = entry.Name()
 	}
 
+	mux.HandleFunc("GET /{$}", app.homeView)
+	mux.HandleFunc("GET /sitemap.xml", app.sitemap)
+	mux.HandleFunc("GET /get-email", app.getEmail)
+
 	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		var firstSegment string
 		segments := strings.Split(strings.Trim(r.URL.Path, "/"), "/")
 		if len(segments) > 0 {
 			firstSegment = segments[0]
 		}
-		switch firstSegment {
-		case "":
-			app.homeView(w, r)
-		case "sitemap.xml":
-			app.sitemap(w, r)
-		default:
-			for _, p := range topLevelPaths {
-				if firstSegment == p {
-					fileServer.ServeHTTP(w, r)
-					return
-				}
+		for _, p := range topLevelPaths {
+			if firstSegment == p {
+				fileServer.ServeHTTP(w, r)
+				return
 			}
-			for i := range Writings {
-				if firstSegment == Writings[i].Slug {
-					app.writingView(w, r, &Writings[i])
-					return
-				}
-			}
-			http.NotFound(w, r)
 		}
+		for i := range Writings {
+			if firstSegment == Writings[i].Slug {
+				app.writingView(w, r, &Writings[i])
+				return
+			}
+		}
+		http.NotFound(w, r)
 	})
 
 	return app.recoverPanic(app.wwwRedirect(app.securityHeaders(app.logRequest(mux))))

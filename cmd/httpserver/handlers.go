@@ -6,9 +6,25 @@ import (
 	"strings"
 )
 
+var MyEmail = string([]byte{
+	0x69, 0x67, 0x6f, 0x72, 0x40, 0x69, 0x67,
+	0x6f, 0x72, 0x6d, 0x69, 0x63, 0x68, 0x61,
+	0x6c, 0x61, 0x6b, 0x2e, 0x63, 0x6f, 0x6d,
+})
+
 func (app *application) redirectToTLS(w http.ResponseWriter, r *http.Request) {
 	target := fmt.Sprintf("https://%s%s", r.Host, r.URL.RequestURI())
 	http.Redirect(w, r, target, http.StatusMovedPermanently)
+}
+
+func (app *application) getEmail(w http.ResponseWriter, r *http.Request) {
+	resp := fmt.Sprintf(`<a href="mailto:%s">%s</a>`, MyEmail, MyEmail)
+
+	w.Header().Set("Content-Type", "text/html")
+
+	if _, err := fmt.Fprint(w, resp); err != nil {
+		app.error(w, r, err)
+	}
 }
 
 func (app *application) homeView(w http.ResponseWriter, r *http.Request) {

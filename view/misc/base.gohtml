@@ -8,13 +8,16 @@
 
     <link href="/css/font.css" rel="stylesheet">
     <link href="/css/main.css" rel="stylesheet">
+    <script src="/js/htmx.min.js" defer></script>
 </head>
 <body>
     <div class="wrapper">
         <h2>Igor Michalak</h2>
-        <nav>
+        <nav class="row-between">
             <ul class="link-list">
                 <li><a href="/">Home</a>
+            </ul>
+            <ul class="link-list">
                 <li><a href="https://x.com/igorjmichalak">X</a>
                 <li><a href="https://github.com/igormichalak">GitHub</a>
                 <li><a href="https://buymeacoffee.com/igormichalak">Buy Me a Coffee</a>
@@ -25,9 +28,11 @@
             {{template "content" .}}
         </main>
         <footer>
-            <a href="https://github.com/igormichalak/website">Source</a>
+            <button class="link-like" hx-get="/get-email" hx-swap="outerHTML">Show Email</button>
             <pre>&nbsp;&bull;&nbsp;</pre>
             <span>All code snippets are under <a href="/0BSD.txt">0BSD</a> license.</span>
+            <pre>&nbsp;&bull;&nbsp;</pre>
+            <a href="https://github.com/igormichalak/website">Source</a>
         </footer>
     </div>
 </body>
