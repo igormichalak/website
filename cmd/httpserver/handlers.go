@@ -6,6 +6,11 @@ import (
 	"strings"
 )
 
+func (app *application) redirectToTLS(w http.ResponseWriter, r *http.Request) {
+	target := fmt.Sprintf("https://%s%s", r.Host, r.URL.RequestURI())
+	http.Redirect(w, r, target, http.StatusMovedPermanently)
+}
+
 func (app *application) homeView(w http.ResponseWriter, r *http.Request) {
 	data := &TemplateData{AllWritings: Writings}
 	app.render(w, r, http.StatusOK, "home.gohtml", data)

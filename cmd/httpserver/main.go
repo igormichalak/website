@@ -41,6 +41,7 @@ func run() error {
 	if !exists {
 		port = DefaultPort
 	}
+	redirectPort := os.Getenv("REDIRECT_PORT")
 
 	var logger *slog.Logger
 	if *debug {
@@ -75,8 +76,8 @@ func run() error {
 
 	tlsConfig := &tls.Config{
 		GetCertificate: kpr.GetCertificate,
-		MinVersion: tls.VersionTLS12,
-		MaxVersion: tls.VersionTLS13,
+		MinVersion:     tls.VersionTLS12,
+		MaxVersion:     tls.VersionTLS13,
 		CipherSuites: []uint16{
 			tls.TLS_AES_128_GCM_SHA256,
 			tls.TLS_AES_256_GCM_SHA384,
@@ -92,6 +93,8 @@ func run() error {
 		ClientSessionCache: tls.NewLRUClientSessionCache(128),
 	}
 
+	errorLog := slog.NewLogLogger(logger.Handler(), slog.LevelError)
+
 	srv := &http.Server{
 		Addr:              ":" + port,
 		Handler:           app.routes(),
@@ -100,8 +103,19 @@ func run() error {
 		WriteTimeout:      12 * time.Second,
 		IdleTimeout:       time.Minute,
 		MaxHeaderBytes:    8_192,
-		ErrorLog:          slog.NewLogLogger(logger.Handler(), slog.LevelError),
+		ErrorLog:          errorLog,
 		TLSConfig:         tlsConfig,
+	}
+
+	redirectSrv := &http.Server{
+		Addr:              ":" + redirectPort,
+		Handler:           http.HandlerFunc(app.redirectToTLS),
+		ReadTimeout:       6 * time.Second,
+		ReadHeaderTimeout: 2 * time.Second,
+		WriteTimeout:      6 * time.Second,
+		IdleTimeout:       30 * time.Second,
+		MaxHeaderBytes:    8_192,
+		ErrorLog:          errorLog,
 	}
 
 	stopC := make(chan os.Signal, 1)
@@ -121,22 +135,43 @@ func run() error {
 		}
 	}(errorC)
 
+	go func(ec chan error) {
+		if redirectPort == "" {
+			return
+		}
+		logger.Info(fmt.Sprintf("Starting redirect server on %s...", redirectSrv.Addr))
+
+		err := redirectSrv.ListenAndServe()
+		if err != nil && !errors.Is(err, http.ErrServerClosed) {
+			logger.Error("Redirect server failed", "err", err)
+			ec <- fmt.Errorf("redirect server failed: %w", err)
+		} else {
+			ec <- nil
+		}
+	}(errorC)
+
 	select {
 	case err := <-errorC:
 		return err
 	case <-stopC:
 	}
 
-	logger.Info("Shutting down server...")
+	logger.Info("Shutting down server(s)...")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
+	if redirectPort != "" {
+		if err := redirectSrv.Shutdown(ctx); err != nil {
+			logger.Error("Redirect server shutdown failed", "err", err)
+			return fmt.Errorf("redirect server shutdown failed: %w", err)
+		}
+	}
 	if err := srv.Shutdown(ctx); err != nil {
 		logger.Error("Server shutdown failed", "err", err)
-		return fmt.Errorf("sever shutdown failed: %w", err)
+		return fmt.Errorf("server shutdown failed: %w", err)
 	}
-	logger.Info("Server gracefully stopped.")
+	logger.Info("Server(s) gracefully stopped.")
 
 	return nil
 }
