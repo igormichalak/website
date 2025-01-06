@@ -47,7 +47,7 @@ func (app *application) routes() http.Handler {
 				return
 			}
 		}
-		http.NotFound(w, r)
+		app.notFoundView(w, r)
 	})
 
 	return app.recoverPanic(app.wwwRedirect(app.securityHeaders(app.logRequest(mux))))

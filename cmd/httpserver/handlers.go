@@ -33,6 +33,10 @@ func (app *application) homeView(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, http.StatusOK, "home.gohtml", data)
 }
 
+func (app *application) notFoundView(w http.ResponseWriter, r *http.Request) {
+	app.render(w, r, http.StatusNotFound, "not_found.gohtml", &TemplateData{})
+}
+
 func (app *application) sitemap(w http.ResponseWriter, r *http.Request) {
 	if SitemapXML == "" {
 		SitemapXML = generateSitemap()

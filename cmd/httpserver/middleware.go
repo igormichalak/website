@@ -12,7 +12,7 @@ var UntrackedPaths = []string{"/css", "/fonts", "/js", "/favicon.ico"}
 
 func (app *application) securityHeaders(next http.Handler) http.Handler {
 	rules := []string{
-		"default-src 'self'",
+		"default-src 'self' misc.igormichalak.com",
 		"script-src 'self'",
 		"frame-src 'self'",
 		"style-src 'self' 'unsafe-inline'",
