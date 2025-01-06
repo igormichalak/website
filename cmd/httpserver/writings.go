@@ -27,6 +27,7 @@ type Writing struct {
 	Description string
 	Body        template.HTML
 	PublishedAt time.Time
+	ModTime     time.Time
 }
 
 func loadWriting(file fs.File, md goldmark.Markdown) (*Writing, error) {
@@ -54,6 +55,7 @@ func loadWriting(file fs.File, md goldmark.Markdown) (*Writing, error) {
 	writing := &Writing{
 		Featured: false,
 		Body:     template.HTML(buf.String()),
+		ModTime:  fileInfo.ModTime(),
 	}
 
 	title, ok := metadata["title"].(string)
@@ -70,6 +72,12 @@ func loadWriting(file fs.File, md goldmark.Markdown) (*Writing, error) {
 
 	featured, ok := metadata["featured"].(bool)
 	writing.Featured = ok && featured
+
+	description, ok := metadata["description"].(string)
+	if !ok {
+		return nil, fmt.Errorf("no valid description meta for %s", fileInfo.Name())
+	}
+	writing.Description = description
 
 	publishedAtString, ok := metadata["published_at"].(string)
 	if !ok {
