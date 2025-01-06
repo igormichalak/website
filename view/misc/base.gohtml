@@ -23,9 +23,13 @@
             </div>
         </header>
         <nav class="row-between">
+        {{if .Quote}}
+            <span>{{.Quote}}</span>
+        {{else}}
             <ul class="link-list">
                 <li><a href="/">Home</a>
             </ul>
+        {{end}}
             <ul class="link-list">
                 <li><a href="https://x.com/igorjmichalak">X</a>
                 <li><a href="https://github.com/igormichalak">GitHub</a>

@@ -29,7 +29,7 @@ func (app *application) getEmail(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) homeView(w http.ResponseWriter, r *http.Request) {
-	data := &TemplateData{AllWritings: Writings}
+	data := &TemplateData{AllWritings: Writings, Quote: getRandomQuote()}
 	app.render(w, r, http.StatusOK, "home.gohtml", data)
 }
 

@@ -13,6 +13,7 @@ import (
 type TemplateData struct {
 	AllWritings   []Writing
 	ActiveWriting *Writing
+	Quote         template.HTML
 }
 
 func newTemplateCache() (map[string]*template.Template, error) {

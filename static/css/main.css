@@ -8,6 +8,22 @@
     font-size: 16px;
 }
 
+.font-md {
+    font-size: 1.1rem;
+}
+
+.font-lg {
+    font-size: 1.2rem;
+}
+
+.no-deco {
+    text-decoration: none;
+}
+
+.no-break {
+    white-space: nowrap;
+}
+
 @media not (prefers-reduced-motion) {
     :root {
         scroll-behavior: smooth;
