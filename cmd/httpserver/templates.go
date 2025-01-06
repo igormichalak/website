@@ -6,9 +6,16 @@ import (
 	"html/template"
 	"io/fs"
 	"net/http"
+	"time"
 
 	"github.com/igormichalak/website/view"
 )
+
+var funcs = template.FuncMap{
+	"formatRFC3339": func(t time.Time) string {
+		return t.Format(time.RFC3339)
+	},
+}
 
 type TemplateData struct {
 	AllWritings   []Writing
@@ -35,7 +42,7 @@ func newTemplateCache() (map[string]*template.Template, error) {
 			name,
 		}
 
-		tmpl, err := template.New(name).ParseFS(view.TemplatesFS, patterns...)
+		tmpl, err := template.New(name).Funcs(funcs).ParseFS(view.TemplatesFS, patterns...)
 		if err != nil {
 			return nil, err
 		}

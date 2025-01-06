@@ -5,17 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{template "title" .}}</title>
+    <meta name="author" content="Igor Michalak">
+    <meta name="color-scheme" content="only light">
 
     <link href="/css/font.css" rel="stylesheet">
     <link href="/css/main.css" rel="stylesheet">
     <script src="/js/htmx.min.js" defer></script>
 
     <link href="/rss.xml" rel="alternate" type="application/rss+xml">
+
+    {{template "extra_head" .}}
 </head>
 <body>
     <div class="wrapper">
         <header class="row-between">
-            <h2>Igor Michalak</h2>
+            <h2>Igor Michalak's Writings</h2>
             <div class="row-05">
                 <img src="/valid-html.png" alt="[Valid HTML]">
                 <img src="/valid-css.png" alt="[Valid CSS]">

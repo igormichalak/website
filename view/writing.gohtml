@@ -1,5 +1,34 @@
 {{define "title"}}{{.ActiveWriting.Title}} &ndash; Igor Michalak{{end}}
 
+{{define "extra_head"}}{{with .ActiveWriting}}
+<link rel="canonical" href="https://www.igormichalak.com/{{.Slug}}">
+<link rel="alternate" href="https://www.igormichalak.com/{{.Slug}}" hreflang="en">
+<link rel="alternate" href="https://www.igormichalak.com/{{.Slug}}" hreflang="x-default">
+
+<meta property="og:title" content="{{.Title}}">
+<meta property="og:type" content="article">
+<meta property="article:author" content="Igor Michalak">
+<meta property="article:published_time" content="{{.PublishedAt | formatRFC3339}}">
+<meta property="og:description" content="{{.Description}}">
+<meta property="og:url" content="https://www.igormichalak.com/{{.Slug}}">
+<meta property="og:locale" content="en_US">
+
+<script type="application/ld+json">
+{
+	"@context": "https://schema.org/",
+	"@type": "BlogPosting",
+	"author": [{
+		"@type": "Person",
+		"name": "Igor Michalak",
+		"url": "https://www.igormichalak.com"
+	}],
+	"datePublished": "{{.PublishedAt | formatRFC3339}}",
+	"headline": "{{.Title}}",
+	"description": "{{.Description}}"
+}
+</script>
+{{end}}{{end}}
+
 {{define "content"}}{{with .ActiveWriting}}
 <h1>{{.Title}}</h1>
 <span class="writing-details">{{.PublishedAt.Format "January 2, 2006"}}</span>
