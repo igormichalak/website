@@ -26,6 +26,7 @@ func (app *application) routes() http.Handler {
 
 	mux.HandleFunc("GET /{$}", app.homeView)
 	mux.HandleFunc("GET /sitemap.xml", app.sitemap)
+	mux.HandleFunc("GET /rss.xml", app.rss)
 	mux.HandleFunc("GET /get-email", app.getEmail)
 
 	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {

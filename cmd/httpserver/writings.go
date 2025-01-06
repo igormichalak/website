@@ -24,6 +24,7 @@ type Writing struct {
 	Title       string
 	Slug        string
 	Featured    bool
+	Description string
 	Body        template.HTML
 	PublishedAt time.Time
 }

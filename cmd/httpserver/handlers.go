@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"strings"
 )
 
 var MyEmail = string([]byte{
@@ -11,6 +10,8 @@ var MyEmail = string([]byte{
 	0x6f, 0x72, 0x6d, 0x69, 0x63, 0x68, 0x61,
 	0x6c, 0x61, 0x6b, 0x2e, 0x63, 0x6f, 0x6d,
 })
+
+var SitemapXML, RSSXML string
 
 func (app *application) redirectToTLS(w http.ResponseWriter, r *http.Request) {
 	target := fmt.Sprintf("https://%s%s", r.Host, r.URL.RequestURI())
@@ -33,28 +34,21 @@ func (app *application) homeView(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) sitemap(w http.ResponseWriter, r *http.Request) {
-	var sb strings.Builder
-	sb.WriteString(`<?xml version="1.0" encoding="UTF-8"?>`)
-	sb.WriteString(`<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`)
-
-	for _, writing := range Writings {
-		locValue := BaseURL + "/" + writing.Slug
-		lastmodValue := writing.PublishedAt.Format("2006-01-02")
-
-		loc := fmt.Sprintf("<loc>%s</loc>", locValue)
-		lastmod := fmt.Sprintf("<lastmod>%s</lastmod>", lastmodValue)
-
-		sb.WriteString("<url>")
-		sb.WriteString(loc)
-		sb.WriteString(lastmod)
-		sb.WriteString("</url>")
+	if SitemapXML == "" {
+		SitemapXML = generateSitemap()
 	}
-
-	sb.WriteString("</urlset>\n")
-
 	w.Header().Set("Content-Type", "application/xml")
+	if _, err := fmt.Fprint(w, SitemapXML); err != nil {
+		app.error(w, r, err)
+	}
+}
 
-	if _, err := fmt.Fprint(w, sb.String()); err != nil {
+func (app *application) rss(w http.ResponseWriter, r *http.Request) {
+	if RSSXML == "" {
+		RSSXML = generateRSS()
+	}
+	w.Header().Set("Content-Type", "application/rss+xml")
+	if _, err := fmt.Fprint(w, RSSXML); err != nil {
 		app.error(w, r, err)
 	}
 }
