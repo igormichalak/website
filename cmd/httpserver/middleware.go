@@ -8,7 +8,12 @@ import (
 	"unicode"
 )
 
-var UntrackedPaths = []string{"/css", "/fonts", "/js", "/favicon.ico"}
+var UntrackedPaths = []string{
+	"/css",
+	"/fonts",
+	"/js",
+	"/images",
+}
 
 func (app *application) securityHeaders(next http.Handler) http.Handler {
 	rules := []string{

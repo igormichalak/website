@@ -21,12 +21,10 @@
 <ul class="writing-list">
 {{range .AllWritings}}
 	<li>
-		<a href="/{{.Slug}}" class="writing-title">
+		<a href="/{{.Slug}}" class="writing-entry-title">
 			{{.Title}}
 		</a>
-		<span class="writing-details">
-			<span class="font-mono">{{.PublishedAt.Format "2006-01-02"}}</span>
-		</span>
+		<span class="font-mono font-sm">{{.PublishedAt.Format "2006-01-02"}}</span>
 	</li>
 {{end}}
 </ul>
