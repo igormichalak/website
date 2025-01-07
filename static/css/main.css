@@ -6,6 +6,11 @@
     font-kerning: normal;
     font-synthesis: none;
     font-size: 16px;
+
+    --light-color: #f9f7e5;
+    --medium-color: #615048;
+    --dark-color: #391e10;
+    --anchor-color: #873707;
 }
 
 @media not (prefers-reduced-motion) {
@@ -23,6 +28,8 @@ body {
     width: 100vw;
     min-height: 100vh;
 
+    background-color: var(--light-color);
+    color: var(--dark-color);
     font-family: 'Atkinson Hyperlegible', sans-serif;
     font-size: 1rem;
 }
@@ -30,6 +37,19 @@ body {
 a,
 button {
     touch-action: manipulation;
+}
+
+a:link,
+a:visited {
+    color: var(--anchor-color);
+}
+
+.link-like {
+    all: unset;
+    display: inline-block;
+    color: var(--anchor-color);
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .wrapper {
@@ -54,7 +74,7 @@ hr {
     width: 100%;
     height: 1px;
     border: none;
-    background-color: #ddd;
+    background-color: var(--medium-color);
     margin: 2.25rem 0 3.25rem 0;
 }
 
@@ -90,7 +110,7 @@ hr {
 .writing-details {
     display: inline-block;
     font-size: 1rem;
-    color: #696969;
+    color: var(--medium-color);
 }
 
 article {
@@ -105,7 +125,7 @@ footer {
     justify-content: center;
     align-items: center;
 
-    color: #696969;
+    color: var(--medium-color);
     font-size: 0.9rem;
 }
 
