@@ -5,6 +5,9 @@ import (
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/igormichalak/website"
+	"github.com/justinas/alice"
 )
 
 const StaticDirPath = "./static"
@@ -12,10 +15,14 @@ const StaticDirPath = "./static"
 func (app *application) routes() http.Handler {
 	mux := http.NewServeMux()
 
-	staticFS := os.DirFS(StaticDirPath)
-	fileServer := http.FileServerFS(staticFS)
+	var fileServer http.Handler
+	if app.Debug {
+		fileServer = http.FileServerFS(os.DirFS(StaticDirPath))
+	} else {
+		fileServer = http.FileServerFS(website.StaticFS)
+	}
 
-	entries, err := fs.ReadDir(staticFS, ".")
+	entries, err := fs.ReadDir(website.StaticFS, ".")
 	if err != nil {
 		panic(err)
 	}
@@ -30,25 +37,29 @@ func (app *application) routes() http.Handler {
 	mux.HandleFunc("GET /get-email", app.getEmail)
 
 	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		var firstSegment string
 		segments := strings.Split(strings.Trim(r.URL.Path, "/"), "/")
-		if len(segments) > 0 {
-			firstSegment = segments[0]
-		}
-		for _, p := range topLevelPaths {
-			if firstSegment == p {
-				fileServer.ServeHTTP(w, r)
-				return
+		if len(segments) >= 1 {
+			for _, p := range topLevelPaths {
+				if segments[0] == p {
+					fileServer.ServeHTTP(w, r)
+					return
+				}
 			}
 		}
-		for i := range Writings {
-			if firstSegment == Writings[i].Slug {
-				app.writingView(w, r, &Writings[i])
-				return
+		if len(segments) == 1 {
+			for i := range Writings {
+				if segments[0] == Writings[i].Slug {
+					app.writingView(w, r, &Writings[i])
+					return
+				}
 			}
 		}
 		app.notFoundView(w, r)
 	})
 
-	return app.recoverPanic(app.wwwRedirect(app.securityHeaders(app.logRequest(mux))))
+	chain := alice.New(
+		app.recoverPanic, app.wwwRedirect, app.securityHeaders, app.logRequest,
+	)
+
+	return chain.Then(mux)
 }

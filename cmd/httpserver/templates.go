@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/igormichalak/website/view"
+	"github.com/igormichalak/website"
 )
 
 var funcs = template.FuncMap{
@@ -26,7 +26,7 @@ type TemplateData struct {
 func newTemplateCache() (map[string]*template.Template, error) {
 	cache := map[string]*template.Template{}
 
-	entries, err := fs.ReadDir(view.TemplatesFS, ".")
+	entries, err := fs.ReadDir(website.TemplatesFS, ".")
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +42,7 @@ func newTemplateCache() (map[string]*template.Template, error) {
 			name,
 		}
 
-		tmpl, err := template.New(name).Funcs(funcs).ParseFS(view.TemplatesFS, patterns...)
+		tmpl, err := template.New(name).Funcs(funcs).ParseFS(website.TemplatesFS, patterns...)
 		if err != nil {
 			return nil, err
 		}

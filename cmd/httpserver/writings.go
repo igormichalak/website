@@ -6,9 +6,9 @@ import (
 	"html/template"
 	"io"
 	"io/fs"
-	"os"
 	"time"
 
+	"github.com/igormichalak/website"
 	"github.com/yuin/goldmark"
 	meta "github.com/yuin/goldmark-meta"
 	"github.com/yuin/goldmark/extension"
@@ -93,9 +93,7 @@ func loadWriting(file fs.File, md goldmark.Markdown) (*Writing, error) {
 }
 
 func init() {
-	writingsFS := os.DirFS(WritingsDirPath)
-
-	entries, err := fs.ReadDir(writingsFS, ".")
+	entries, err := fs.ReadDir(website.WritingsFS, ".")
 	if err != nil {
 		panic(fmt.Errorf("can't open %s, error: %w", WritingsDirPath, err))
 	}
@@ -112,7 +110,7 @@ func init() {
 	)
 
 	for _, entry := range entries {
-		file, err := writingsFS.Open(entry.Name())
+		file, err := website.WritingsFS.Open(entry.Name())
 		if err != nil {
 			panic(err)
 		}
