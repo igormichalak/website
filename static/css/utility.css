@@ -6,6 +6,10 @@
     height: auto;
 }
 
+.font-serif {
+    font-family: 'IBM Plex Serif', serif;
+}
+
 .font-mono {
     font-family: 'JetBrains Mono', monospace;
 }
