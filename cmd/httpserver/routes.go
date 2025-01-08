@@ -57,9 +57,15 @@ func (app *application) routes() http.Handler {
 		app.notFoundView(w, r)
 	})
 
-	chain := alice.New(
-		app.recoverPanic, app.wwwRedirect, app.securityHeaders, app.logRequest,
-	)
+	chain := alice.New(app.recoverPanic)
+	if !app.Debug {
+		chain.Append(app.wwwRedirect)
+	}
+	chain.Append(app.securityHeaders)
+	if !app.Debug {
+		chain.Append(app.cacheHeaders)
+	}
+	chain.Append(app.logRequest)
 
 	return chain.Then(mux)
 }

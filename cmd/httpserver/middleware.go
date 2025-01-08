@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand/v2"
 	"net/http"
 	"strings"
 	"time"
@@ -13,6 +14,40 @@ var UntrackedPaths = []string{
 	"/fonts",
 	"/js",
 	"/images",
+}
+
+const DayInSeconds = 24 * 60 * 60
+
+const ETagCharset = "0123456789abcdefghijklmnopqrstuvwxyz" +
+	"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+var RuntimeETag = randomETag()
+
+func randomETag() string {
+	buf := make([]byte, 16)
+	charsetLen := uint(len(ETagCharset))
+	for i := range buf {
+		buf[i] = ETagCharset[rand.UintN(charsetLen)]
+	}
+	return string(buf)
+}
+
+func (app *application) cacheHeaders(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ccVal := fmt.Sprintf(
+			"public, max-age=1800, stale-while-revalidate=%d, stale-if-error=%d",
+			365 * DayInSeconds, DayInSeconds,
+		)
+		w.Header().Set("Cache-Control", ccVal)
+		w.Header().Set("ETag", fmt.Sprintf(`"%s"`, RuntimeETag))
+
+		if strings.Contains(r.Header.Get("If-None-Match"), RuntimeETag) {
+			w.WriteHeader(http.StatusNotModified)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
 }
 
 func (app *application) securityHeaders(next http.Handler) http.Handler {
