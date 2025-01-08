@@ -13,7 +13,7 @@ func generateSitemap() string {
 
 	for _, writing := range Writings {
 		locValue := BaseURL + "/" + writing.Slug
-		lastmodValue := writing.ModTime.Format("2006-01-02")
+		lastmodValue := writing.LastModified.Format("2006-01-02")
 
 		loc := fmt.Sprintf("<loc>%s</loc>", locValue)
 		lastmod := fmt.Sprintf("<lastmod>%s</lastmod>", lastmodValue)

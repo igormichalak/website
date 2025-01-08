@@ -21,13 +21,13 @@ const WritingsDirPath = "./writings"
 var Writings []Writing
 
 type Writing struct {
-	Title       string
-	Slug        string
-	Featured    bool
-	Description string
-	Body        template.HTML
-	PublishedAt time.Time
-	ModTime     time.Time
+	Title        string
+	Slug         string
+	Featured     bool
+	Description  string
+	Body         template.HTML
+	PublishedAt  time.Time
+	LastModified time.Time
 }
 
 func loadWriting(file fs.File, md goldmark.Markdown) (*Writing, error) {
@@ -55,7 +55,6 @@ func loadWriting(file fs.File, md goldmark.Markdown) (*Writing, error) {
 	writing := &Writing{
 		Featured: false,
 		Body:     template.HTML(buf.String()),
-		ModTime:  fileInfo.ModTime(),
 	}
 
 	title, ok := metadata["title"].(string)
@@ -79,15 +78,26 @@ func loadWriting(file fs.File, md goldmark.Markdown) (*Writing, error) {
 	}
 	writing.Description = description
 
-	publishedAtString, ok := metadata["published_at"].(string)
+	publishedAtStr, ok := metadata["published_at"].(string)
 	if !ok {
 		return nil, fmt.Errorf("no valid published_at meta for %s", fileInfo.Name())
 	}
-	publishedAt, err := time.Parse("2006-01-02", publishedAtString)
+	publishedAt, err := time.Parse("2006-01-02", publishedAtStr)
 	if err != nil {
 		return nil, fmt.Errorf("can't parse published_at: %w", err)
 	}
 	writing.PublishedAt = publishedAt
+
+	lastModifiedStr, ok := metadata["last_modified"].(string)
+	if ok {
+		lastModified, err := time.Parse("2006-01-02", lastModifiedStr)
+		if err != nil {
+			return nil, fmt.Errorf("can't parse last_modified: %w", err)
+		}
+		writing.LastModified = lastModified
+	} else {
+		writing.LastModified = publishedAt
+	}
 
 	return writing, nil
 }
