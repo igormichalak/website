@@ -6,10 +6,19 @@ import (
 	"time"
 )
 
+var StartupTime = time.Now()
+
 func generateSitemap() string {
 	var sb strings.Builder
 	sb.WriteString(`<?xml version="1.0" encoding="UTF-8"?>`)
 	sb.WriteString(`<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`)
+
+	sb.WriteString("<url>")
+	sb.WriteString(fmt.Sprintf("<loc>%s</loc>", BaseURL))
+	sb.WriteString(fmt.Sprintf("<lastmod>%s</lastmod>", StartupTime.Format("2006-01-02")))
+	sb.WriteString("<changefreq>weekly</changefreq>")
+	sb.WriteString("<priority>1.0</priority>")
+	sb.WriteString("</url>")
 
 	for _, writing := range Writings {
 		locValue := BaseURL + "/" + writing.Slug
@@ -21,6 +30,7 @@ func generateSitemap() string {
 		sb.WriteString("<url>")
 		sb.WriteString(loc)
 		sb.WriteString(lastmod)
+		sb.WriteString("<priority>0.9</priority>")
 		sb.WriteString("</url>")
 	}
 

@@ -70,6 +70,10 @@ header {
     margin-bottom: 0.75rem;
 }
 
+.rss-badge-anchor {
+    display: flex;
+}
+
 hr {
     width: 100%;
     height: 1px;
