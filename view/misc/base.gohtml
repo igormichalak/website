@@ -37,7 +37,7 @@
     <div class="wrapper">
         <header class="row-between">
             <h2 class="font-italic">Igor Michalak's Writings</h2>
-            <div class="row-025">
+            <div class="row-025 md-hidden">
                 <img src="/images/valid-html.png" alt="[Valid HTML]">
                 <img src="/images/valid-css.png" alt="[Valid CSS]">
                 <a href="/rss.xml" class="rss-badge-anchor" title="RSS" aria-label="RSS">
@@ -46,7 +46,7 @@
             </div>
         </header>
         <nav class="row-top-between">
-            <div class="flex-1 row-top-start">
+            <div class="{{if .Quote}}flex-1 sm-flex-3{{else}}flex-1{{end}} row-top-start">
             {{if .Quote}}
                 <span>{{.Quote}}</span>
             {{else}}
@@ -55,11 +55,11 @@
                 </ul>
             {{end}}
             </div>
-            <div class="{{if .Quote}}flex-1{{else}}flex-3{{end}} row-top-end">
-                <ul class="link-list">
+            <div class="{{if .Quote}}flex-1 sm-flex-2{{else}}flex-3{{end}} row-top-end ml-2 no-shrink">
+                <ul class="link-list sm-flex-col-rev sm-gap-075">
                     <li><a href="https://x.com/igorjmichalak">X</a>
                     <li><a href="https://github.com/igormichalak">GitHub</a>
-                    <li><a href="https://buymeacoffee.com/igormichalak">Buy Me a Coffee</a>
+                    <li><a class="no-break" href="https://buymeacoffee.com/igormichalak">Buy Me a Coffee</a>
                 </ul>
             </div>
         </nav>
@@ -70,8 +70,8 @@
         <footer>
             <button class="link-like" hx-get="/get-email" hx-swap="outerHTML">Show Email</button>
             <pre>&nbsp;&bull;&nbsp;</pre>
-            <span>All code snippets are under <a href="/0BSD.txt">0BSD</a> license.</span>
-            <pre>&nbsp;&bull;&nbsp;</pre>
+            <span class="sm-hidden">All code snippets are under <a href="/0BSD.txt">0BSD</a> license.</span>
+            <pre class="sm-hidden">&nbsp;&bull;&nbsp;</pre>
             <a href="https://github.com/igormichalak/website">Source</a>
         </footer>
     </div>
