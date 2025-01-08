@@ -1,6 +1,5 @@
 #!/bin/bash
 
-COMMAND="./bin/httpserver"
 export PORT=443
 export REDIRECT_PORT=80
 
@@ -13,7 +12,7 @@ PID_FILE="./logs/server_pid.txt"
 
 mkdir -p ./logs
 
-nohup sudo -E $COMMAND --cert-file=$CERT_FILE --key-file=$KEY_FILE 2>> $LOG_FILE &
+nohup ./bin/httpserver --cert-file=$CERT_FILE --key-file=$KEY_FILE 2>> $LOG_FILE &
 PID=$!
 
 echo $PID > $PID_FILE
