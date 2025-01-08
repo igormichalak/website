@@ -59,13 +59,13 @@ func (app *application) routes() http.Handler {
 
 	chain := alice.New(app.recoverPanic)
 	if !app.Debug {
-		chain.Append(app.wwwRedirect)
+		chain = chain.Append(app.wwwRedirect)
 	}
-	chain.Append(app.securityHeaders)
+	chain = chain.Append(app.securityHeaders)
 	if !app.Debug {
-		chain.Append(app.cacheHeaders)
+		chain = chain.Append(app.cacheHeaders)
 	}
-	chain.Append(app.logRequest)
+	chain = chain.Append(app.logRequest)
 
 	return chain.Then(mux)
 }
