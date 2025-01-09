@@ -27,7 +27,10 @@
     <link href="/css/font.css" rel="stylesheet">
     <link href="/css/utility.css" rel="stylesheet">
     <link href="/css/main.css" rel="stylesheet">
+
+    <script src="https://cdn.usefathom.com/script.js" data-site="GVKSNDBQ" defer></script>
     <script src="/js/htmx.min.js" defer></script>
+    <script src="/js/events.js" defer></script>
 
     <link href="/rss.xml" rel="alternate" type="application/rss+xml">
 
@@ -57,9 +60,15 @@
             </div>
             <div class="{{if .Quote}}flex-1 sm-flex-2{{else}}flex-3{{end}} row-top-end ml-2 no-shrink">
                 <ul class="link-list sm-flex-col-rev sm-gap-075">
-                    <li><a href="https://x.com/igorjmichalak">X</a>
-                    <li><a href="https://github.com/igormichalak">GitHub</a>
-                    <li><a class="no-break" href="https://buymeacoffee.com/igormichalak">Buy Me a Coffee</a>
+                    <li>
+                        <a class="social-link" href="https://x.com/igorjmichalak">X</a>
+                    </li>
+                    <li>
+                        <a class="social-link" href="https://github.com/igormichalak">GitHub</a>
+                    </li>
+                    <li>
+                        <a class="social-link no-break" href="https://buymeacoffee.com/igormichalak">Buy Me a Coffee</a>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -68,7 +77,8 @@
             {{template "content" .}}
         </main>
         <footer>
-            <button class="link-like" hx-get="/get-email" hx-swap="outerHTML">Show Email</button>
+            <button class="link-like" hx-on:click="fathom.trackEvent('get email click')"
+                hx-get="/get-email" hx-swap="outerHTML">Show Email</button>
             <pre>&nbsp;&bull;&nbsp;</pre>
             <span class="sm-hidden">All code snippets are under <a href="/0BSD.txt">0BSD</a> license.</span>
             <pre class="sm-hidden">&nbsp;&bull;&nbsp;</pre>

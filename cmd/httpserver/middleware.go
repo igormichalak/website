@@ -53,10 +53,11 @@ func (app *application) cacheHeaders(next http.Handler) http.Handler {
 func (app *application) securityHeaders(next http.Handler) http.Handler {
 	rules := []string{
 		"default-src 'self' misc.igormichalak.com",
-		"script-src 'self'",
+		"script-src 'self' 'unsafe-eval' cdn.usefathom.com",
+		"img-src 'self' cdn.usefathom.com",
 		"frame-src 'self'",
 		"style-src 'self' 'unsafe-inline'",
-		"connect-src 'self'",
+		"connect-src 'self' cdn.usefathom.com",
 	}
 	csp := strings.Join(rules, "; ")
 
