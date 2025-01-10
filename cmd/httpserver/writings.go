@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"io"
 	"io/fs"
+	"slices"
 	"time"
 
 	"github.com/igormichalak/website"
@@ -143,6 +144,10 @@ func init() {
 			panic(err)
 		}
 	}
+
+	slices.SortFunc(Writings, func(a, b Writing) int {
+		return b.PublishedAt.Compare(a.PublishedAt)
+	})
 
 	fmt.Printf("Loaded %d writing(s).\n", len(Writings))
 }

@@ -21,6 +21,13 @@ type TemplateData struct {
 	AllWritings   []Writing
 	ActiveWriting *Writing
 	Quote         template.HTML
+	Debug         bool
+}
+
+func (app *application) newTemplateData() *TemplateData {
+	return &TemplateData{
+		Debug: app.Debug,
+	}
 }
 
 func newTemplateCache() (map[string]*template.Template, error) {

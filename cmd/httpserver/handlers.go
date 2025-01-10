@@ -29,12 +29,15 @@ func (app *application) getEmail(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) homeView(w http.ResponseWriter, r *http.Request) {
-	data := &TemplateData{AllWritings: Writings, Quote: getRandomQuote()}
+	data := app.newTemplateData()
+	data.AllWritings = Writings
+	data.Quote = getRandomQuote()
 	app.render(w, r, http.StatusOK, "home.gohtml", data)
 }
 
 func (app *application) notFoundView(w http.ResponseWriter, r *http.Request) {
-	app.render(w, r, http.StatusNotFound, "not_found.gohtml", &TemplateData{})
+	data := app.newTemplateData()
+	app.render(w, r, http.StatusNotFound, "not_found.gohtml", data)
 }
 
 func (app *application) sitemap(w http.ResponseWriter, r *http.Request) {
@@ -58,6 +61,7 @@ func (app *application) rss(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) writingView(w http.ResponseWriter, r *http.Request, writing *Writing) {
-	data := &TemplateData{ActiveWriting: writing}
+	data := app.newTemplateData()
+	data.ActiveWriting = writing
 	app.render(w, r, http.StatusOK, "writing.gohtml", data)
 }

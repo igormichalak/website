@@ -28,9 +28,12 @@
     <link href="/css/utility.css" rel="stylesheet">
     <link href="/css/main.css" rel="stylesheet">
 
+
+{{if not .Debug}}
     <script src="https://cdn.usefathom.com/script.js" data-site="GVKSNDBQ" defer></script>
-    <script src="/js/htmx.min.js" defer></script>
     <script src="/js/events.js" defer></script>
+{{end}}
+    <script src="/js/htmx.min.js" defer></script>
 
     <link href="/rss.xml" rel="alternate" type="application/rss+xml">
 
